@@ -11,9 +11,10 @@ Emscripten supports two windowing backends (selected at compile time):
   USE_GLFW defined  - GLFW via -s USE_GLFW=3  (default, recommended)
   USE_GLFW absent   - SDL2 via -s USE_SDL=2
 
-Owns no shape-specific logic itself - it only drives Renderer::Instance(),
-which currently renders a rotating triangle and a static square. No user
-interaction is required; rendering is fully automatic.
+Owns no shape-specific logic itself - it only drives Renderer::Instance()
+and maps the left mouse button to the same TouchEventDown/Move/Release
+calls Android forwards from MotionEvent, so click = tap and click-drag =
+swipe on both Desktop and Web.
 *//*__________________________________________________________________________*/
 
 #include "Platform.h"
@@ -29,7 +30,29 @@ interaction is required; rendering is fully automatic.
 // --------------------------------------------------------------------------
 #ifdef USE_GLFW
 
-static GLFWwindow* g_window = nullptr;
+static GLFWwindow* g_window    = nullptr;
+static bool        g_mouseDown = false;
+
+static void mouseButtonCB(GLFWwindow* win, int button, int action, int /*mods*/)
+{
+    if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+    double x, y;
+    glfwGetCursorPos(win, &x, &y);
+
+    if (action == GLFW_PRESS) {
+        g_mouseDown = true;
+        Renderer::Instance().TouchEventDown(static_cast<float>(x), static_cast<float>(y));
+    } else if (action == GLFW_RELEASE) {
+        g_mouseDown = false;
+        Renderer::Instance().TouchEventRelease(static_cast<float>(x), static_cast<float>(y));
+    }
+}
+
+static void cursorPosCB(GLFWwindow* /*win*/, double x, double y)
+{
+    if (g_mouseDown)
+        Renderer::Instance().TouchEventMove(static_cast<float>(x), static_cast<float>(y));
+}
 
 static void fbsize_cb(GLFWwindow* /*win*/, int w, int h)
 {
@@ -63,6 +86,8 @@ int main()
     if (!g_window) { LOGE("glfwCreateWindow failed"); glfwTerminate(); return -1; }
 
     glfwMakeContextCurrent(g_window);
+    glfwSetMouseButtonCallback(g_window,     mouseButtonCB);
+    glfwSetCursorPosCallback(g_window,       cursorPosCB);
     glfwSetFramebufferSizeCallback(g_window, fbsize_cb);
 
     Renderer::Instance().initializeRenderer();
@@ -79,15 +104,40 @@ int main()
 // --------------------------------------------------------------------------
 #else // !USE_GLFW
 
-static SDL_Window*   g_window = nullptr;
-static SDL_GLContext g_glctx  = nullptr;
+static SDL_Window*   g_window    = nullptr;
+static SDL_GLContext g_glctx     = nullptr;
+static bool          g_mouseDown = false;
 
 static void main_loop()
 {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
-        if (ev.type == SDL_QUIT)
-            emscripten_cancel_main_loop();
+        switch (ev.type) {
+            case SDL_QUIT:
+                emscripten_cancel_main_loop();
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (ev.button.button == SDL_BUTTON_LEFT) {
+                    g_mouseDown = true;
+                    Renderer::Instance().TouchEventDown(
+                        static_cast<float>(ev.button.x), static_cast<float>(ev.button.y));
+                }
+                break;
+            case SDL_MOUSEMOTION:
+                if (g_mouseDown)
+                    Renderer::Instance().TouchEventMove(
+                        static_cast<float>(ev.motion.x), static_cast<float>(ev.motion.y));
+                break;
+            case SDL_MOUSEBUTTONUP:
+                if (ev.button.button == SDL_BUTTON_LEFT) {
+                    g_mouseDown = false;
+                    Renderer::Instance().TouchEventRelease(
+                        static_cast<float>(ev.button.x), static_cast<float>(ev.button.y));
+                }
+                break;
+            default:
+                break;
+        }
     }
     Renderer::Instance().render();
     SDL_GL_SwapWindow(g_window);
@@ -132,6 +182,29 @@ int main()
 
 #include <iostream>
 
+static bool g_mouseDown = false;
+
+static void mouseButtonCB(GLFWwindow* win, int button, int action, int /*mods*/)
+{
+    if (button != GLFW_MOUSE_BUTTON_LEFT) return;
+    double x, y;
+    glfwGetCursorPos(win, &x, &y);
+
+    if (action == GLFW_PRESS) {
+        g_mouseDown = true;
+        Renderer::Instance().TouchEventDown(static_cast<float>(x), static_cast<float>(y));
+    } else if (action == GLFW_RELEASE) {
+        g_mouseDown = false;
+        Renderer::Instance().TouchEventRelease(static_cast<float>(x), static_cast<float>(y));
+    }
+}
+
+static void cursorPosCB(GLFWwindow* /*win*/, double x, double y)
+{
+    if (g_mouseDown)
+        Renderer::Instance().TouchEventMove(static_cast<float>(x), static_cast<float>(y));
+}
+
 static void framebufferSizeCB(GLFWwindow* /*win*/, int w, int h)
 {
     Renderer::Instance().resize(w, h);
@@ -140,7 +213,7 @@ static void framebufferSizeCB(GLFWwindow* /*win*/, int w, int h)
 int main()
 {
     std::cout << "GLPI Framework Intro – Desktop (GLFW)\n";
-    std::cout << "Watch the triangle rotate. Press ESC to quit.\n";
+    std::cout << "Click to toggle the fan. Drag to speed it up. Press ESC to quit.\n";
 
     if (!glfwInit()) { std::cerr << "glfwInit failed\n"; return -1; }
 
@@ -162,6 +235,8 @@ int main()
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) { std::cerr << "glewInit failed\n"; return -1; }
 
+    glfwSetMouseButtonCallback(window,     mouseButtonCB);
+    glfwSetCursorPosCallback(window,       cursorPosCB);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCB);
 
     Renderer::Instance().initializeRenderer();

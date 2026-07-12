@@ -42,3 +42,24 @@ Java_com_example_glpiframeworkintro_MainActivity_nativeRender(
 {
     Renderer::Instance().render();
 }
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_glpiframeworkintro_MainActivity_nativeTouchDown(
+        JNIEnv* /*env*/, jobject /*thiz*/, jfloat x, jfloat y)
+{
+    Renderer::Instance().TouchEventDown(x, y);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_glpiframeworkintro_MainActivity_nativeTouchMove(
+        JNIEnv* /*env*/, jobject /*thiz*/, jfloat x, jfloat y)
+{
+    Renderer::Instance().TouchEventMove(x, y);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_glpiframeworkintro_MainActivity_nativeTouchRelease(
+        JNIEnv* /*env*/, jobject /*thiz*/, jfloat x, jfloat y)
+{
+    Renderer::Instance().TouchEventRelease(x, y);
+}

@@ -14,8 +14,7 @@
 @brief
 Singleton Renderer that owns the scene's collection of Model instances. It
 is the only class main.cpp / NativeTemplate.cpp talk to; this header never
-includes Triangle.h or Square.h - only Renderer.cpp knows about concrete
-shapes.
+includes Fan.h directly - only Renderer.cpp knows about concrete shapes.
 *//*__________________________________________________________________________*/
 class Renderer {
 public:
@@ -31,6 +30,11 @@ public:
     bool initializeRenderer();
     void resize(int w, int h);
     void render();
+
+    // Touch / mouse delegation - forwarded to every Model
+    void TouchEventDown(float x, float y);
+    void TouchEventMove(float x, float y);
+    void TouchEventRelease(float x, float y);
 
 private:
     Renderer() = default;

@@ -61,6 +61,21 @@ void Renderer::render() {
         model->Render();
 }
 
+void Renderer::TouchEventDown(float x, float y) {
+    for (Model* model : models)
+        model->TouchEventDown(x, y);
+}
+
+void Renderer::TouchEventMove(float x, float y) {
+    for (Model* model : models)
+        model->TouchEventMove(x, y);
+}
+
+void Renderer::TouchEventRelease(float x, float y) {
+    for (Model* model : models)
+        model->TouchEventRelease(x, y);
+}
+
 #ifdef PLATFORM_ANDROID
 void Renderer::setAssetManager(AAssetManager* mgr) { assetMgr = mgr; }
 #endif

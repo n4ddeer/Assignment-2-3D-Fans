@@ -42,6 +42,10 @@ public:
     void Render()             override;
     void Resize(int w, int h) override;
 
+    void TouchEventDown(float x, float y)    override;
+    void TouchEventMove(float x, float y)    override;
+    void TouchEventRelease(float x, float y) override;
+
 private:
     void drawPart(const glm::vec3& partColor);
 

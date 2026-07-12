@@ -6,6 +6,8 @@ import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -17,9 +19,9 @@ import javax.microedition.khronos.opengles.GL10;
 @date 30/06/2026
 
 @brief
-GLPI Framework Intro demo. Renders a continuously rotating RGB triangle and
-a static yellow square using OpenGL ES 3.0, via the shared Model/Renderer
-architecture in Scene/. No touch interaction - rendering is fully automatic.
+Renders the 3D Fan via the shared Model/Renderer architecture in Scene/.
+Touch gestures (tap to toggle, drag to boost spin speed) are forwarded to
+native code via queueEvent() so they run on the GL thread.
 *//*__________________________________________________________________________*/
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private native boolean nativeInit(AssetManager assetManager);
     private native void    nativeResize(int width, int height);
     private native void    nativeRender();
+    private native void    nativeTouchDown(float x, float y);
+    private native void    nativeTouchMove(float x, float y);
+    private native void    nativeTouchRelease(float x, float y);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+        // Forward touch events to native code - must run on the GL thread.
+        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!rendererInitialized) return true;
+
+                final float x = event.getX();
+                final float y = event.getY();
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        glSurfaceView.queueEvent(() -> nativeTouchDown(x, y));
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        glSurfaceView.queueEvent(() -> nativeTouchMove(x, y));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        glSurfaceView.queueEvent(() -> nativeTouchRelease(x, y));
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

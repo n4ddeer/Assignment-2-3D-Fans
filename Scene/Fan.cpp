@@ -14,6 +14,7 @@ uniform before its glDrawElements call.
 
 #include "Fan.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <cmath>
 
 // ---------------------------------------------------------------------------
 // Cube geometry — 8 corners, grayscale shade per corner (front ~1.0, back ~0.6),
@@ -120,10 +121,12 @@ void Fan::InitModel()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndices), kIndices, GL_STATIC_DRAW);
 
+    // Seal the VAO: unbind it first, then the buffers. The IBO binding was
+    // captured as VAO state while vao was bound, so unbinding it now only
+    // touches the default (0) VAO's binding, not this one's.
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // Deliberately leave GL_ELEMENT_ARRAY_BUFFER bound to ibo — unbinding it
-    // while vao is bound would detach it from the VAO's captured state.
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     LOGI("Fan::InitModel done");
 }
@@ -199,4 +202,35 @@ void Fan::Resize(int w, int h)
     transform.TransformSetMatrixMode(PROJECTION_MATRIX);
     transform.TransformLoadIdentity();
     transform.TransformSetPerspective(glm::radians(60.0f), aspect, 0.01f, 1000.0f, 0.0f);
+}
+
+// ---------------------------------------------------------------------------
+// Gestures — a tap (down+release, little movement) toggles fanOn.
+// ---------------------------------------------------------------------------
+
+void Fan::TouchEventDown(float x, float y)
+{
+    lastX = x;
+    lastY = y;
+    movedDistance = 0.0f;
+    lastMoveTime = std::chrono::steady_clock::now();
+}
+
+void Fan::TouchEventMove(float x, float y)
+{
+    float dx = x - lastX;
+    float dy = y - lastY;
+    movedDistance += std::sqrt(dx * dx + dy * dy);
+    lastX = x;
+    lastY = y;
+}
+
+void Fan::TouchEventRelease(float x, float y)
+{
+    (void)x;
+    (void)y;
+    if (movedDistance < kTapThreshold) {
+        fanOn = !fanOn;
+        LOGI("Fan %s", fanOn ? "ON" : "OFF");
+    }
 }

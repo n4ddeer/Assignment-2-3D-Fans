@@ -29,7 +29,7 @@ IF %ERRORLEVEL% NEQ 0 ( echo Build failed. & pause & exit /b 1 )
 
 echo [3/3] Running ...
 echo.
-echo Watch the triangle rotate. Press ESC to quit.
+echo Watch the fan spin. Click/drag to interact. Press ESC to quit.
 echo.
 pushd build_desktop\Debug
 GLPIFrameworkIntro.exe
