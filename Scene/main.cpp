@@ -1,7 +1,7 @@
 /*!
 @file       main.cpp
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Entry point for Desktop (Windows/GLFW) and WebGL (Emscripten) builds.

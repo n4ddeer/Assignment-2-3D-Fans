@@ -12,7 +12,7 @@
 /*!
 @file       ShaderHelper.h
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       30/06/2026
 
 @brief
 Shared shader compile/link helpers used by every Model. Supports both the

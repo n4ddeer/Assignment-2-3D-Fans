@@ -1,15 +1,24 @@
 /*!
 @file       Fan.cpp
 @author     nurnadianatasya.b@digipen.edu
-@date       12/07/2026
+@date       13/07/2026
 
 @brief
-Part 1 — static fan built from one cube. The 8-vertex/36-index cube is
-uploaded once (positions + per-corner grayscale shade, two sub-regions of
-one VBO, plus an IBO) and recorded into one VAO. Render() walks the scene
-graph in the Transform push/pop stack: a shared "world" pull-back + tilt,
+Implements the Fan model. The 8-vertex/36-index cube is uploaded once
+(positions + per-corner grayscale shade, two sub-regions of one VBO, plus
+an IBO) and recorded into one VAO. Render() walks the scene graph on the
+Transform push/pop stack every frame: a shared "world" pull-back + tilt,
 then base / pole / hub / four blades, each tinted through the PARTCOLOR
-uniform before its glDrawElements call.
+uniform before its glDrawElements call. spinAngle advances by kBaseSpeed
+(+ dragBoost while dragging) at the top of Render(), driving the blade
+rotation.
+
+Gesture handling: TouchEventDown records the starting position and resets
+movedDistance; TouchEventMove accumulates movedDistance for tap detection
+and measures per-event drag velocity (via std::chrono) to compute
+dragBoost, clamped to kMaxBoost; TouchEventRelease toggles fanOn (logging
+"Fan ON"/"Fan OFF") if the total movement stayed under kTapThreshold, and
+always resets dragBoost to 0 so the boost only applies while dragging.
 *//*__________________________________________________________________________*/
 
 #include "Fan.h"
@@ -142,8 +151,8 @@ void Fan::drawPart(const glm::vec3& partColor)
 
 void Fan::Render()
 {
-    // Part 2 — advance the blade angle. fanOn/dragBoost stay at their
-    // Part-1 defaults (true / 0) until the touch gestures land in Parts 3-4.
+    // Advance the blade angle. fanOn is toggled by TouchEventRelease and
+    // dragBoost is set/reset by TouchEventMove/Release below.
     if (fanOn) spinAngle += kBaseSpeed + dragBoost;
     if (spinAngle >= 360.0f) spinAngle -= 360.0f;
 

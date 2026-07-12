@@ -16,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10;
 /*!
 @file       MainActivity.java
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Renders the 3D Fan via the shared Model/Renderer architecture in Scene/.

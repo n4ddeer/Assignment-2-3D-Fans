@@ -9,7 +9,7 @@
 /*!
 @file       Renderer.h
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Singleton Renderer that owns the scene's collection of Model instances. It
@@ -48,5 +48,5 @@ private:
     AAssetManager* assetMgr = nullptr;
 #endif
 
-    std::vector<Model*> models;   // replaces the single Model* model
+    std::vector<Model*> models;
 };

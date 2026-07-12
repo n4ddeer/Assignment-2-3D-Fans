@@ -3,7 +3,7 @@
 /*!
 @file       Model.h
 @author     nurnadianatasya.b@digipen.edu
-@date       30/06/2026
+@date       13/07/2026
 
 @brief
 Abstract lifecycle every renderable shape must implement. Renderer owns a

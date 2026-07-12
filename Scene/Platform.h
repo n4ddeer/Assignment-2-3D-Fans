@@ -3,7 +3,7 @@
 /*!
 @file       Platform.h
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Single-header platform detection for the 3D Fan demo.

@@ -1,13 +1,14 @@
 /*!
 @file       NativeTemplate.cpp
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Thin JNI bridge between the Java/Android layer and Renderer::Instance().
 Converts the Java AssetManager to a native AAssetManager* on init and
-forwards every lifecycle call; it has no knowledge of any concrete shape
-class directly - that boundary lives entirely in Scene/Renderer.cpp.
+forwards every lifecycle call (init/resize/render) and every touch event
+(down/move/release) straight through; it has no knowledge of any concrete
+shape class directly - that boundary lives entirely in Scene/Renderer.cpp.
 
 Native method signatures match MainActivity.java:
   package com.example.glpiframeworkintro

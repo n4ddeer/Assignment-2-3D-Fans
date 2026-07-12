@@ -13,7 +13,7 @@
 /*!
 @file       Fan.h
 @author     nurnadianatasya.b@digipen.edu
-@date       12/07/2026
+@date       13/07/2026
 
 @brief
 Part hierarchy (one shared cube, drawn 7x with a different model matrix
@@ -28,6 +28,12 @@ via the Transform push/pop stack, tinted through PARTCOLOR):
               pole             pole connects hub to base
                |
            ___base___          base sits on the "table"
+
+Gesture behaviour: a tap (touch down + release with little movement)
+toggles fanOn and logs "Fan ON"/"Fan OFF"; a drag's measured speed sets
+dragBoost (added on top of kBaseSpeed while held, clamped to kMaxBoost,
+reset to 0 on release) so a fast flick spins the blades faster and a slow
+drag barely changes them.
 *//*__________________________________________________________________________*/
 class Fan : public Model {
 public:

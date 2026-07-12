@@ -1,12 +1,13 @@
 /*!
 @file       Renderer.cpp
 @author     nurnadianatasya.b@digipen.edu
-@date 30/06/2026
+@date       13/07/2026
 
 @brief
 Renderer singleton implementation. Creates and owns the scene's Fan
 instance through the Model interface, initializes it once, and forwards
-resize()/render() to every Model in the collection each frame.
+resize()/render() and every touch event (down/move/release) to every
+Model in the collection.
 *//*__________________________________________________________________________*/
 
 #include "Fan.h"
