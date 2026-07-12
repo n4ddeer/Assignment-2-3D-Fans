@@ -15,6 +15,7 @@ uniform before its glDrawElements call.
 #include "Fan.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
+#include <algorithm>
 
 // ---------------------------------------------------------------------------
 // Cube geometry — 8 corners, grayscale shade per corner (front ~1.0, back ~0.6),
@@ -205,7 +206,8 @@ void Fan::Resize(int w, int h)
 }
 
 // ---------------------------------------------------------------------------
-// Gestures — a tap (down+release, little movement) toggles fanOn.
+// Gestures — a tap (down+release, little movement) toggles fanOn; a drag's
+// speed (pixels/ms since the last Move) boosts the spin while held.
 // ---------------------------------------------------------------------------
 
 void Fan::TouchEventDown(float x, float y)
@@ -220,7 +222,19 @@ void Fan::TouchEventMove(float x, float y)
 {
     float dx = x - lastX;
     float dy = y - lastY;
-    movedDistance += std::sqrt(dx * dx + dy * dy);
+    float dist = std::sqrt(dx * dx + dy * dy);   // pixels this event
+    movedDistance += dist;
+
+    auto now  = std::chrono::steady_clock::now();
+    float dtMs = std::chrono::duration<float, std::milli>(now - lastMoveTime).count();
+    lastMoveTime = now;
+
+    if (dtMs > 0.0f) {
+        float velocity = dist / dtMs;   // pixels per millisecond
+        dragBoost = std::min(velocity * kBoostScale, kMaxBoost);
+        LOGI("Fan drag velocity=%.3f px/ms -> boost=%.2f", velocity, dragBoost);
+    }
+
     lastX = x;
     lastY = y;
 }
@@ -233,4 +247,5 @@ void Fan::TouchEventRelease(float x, float y)
         fanOn = !fanOn;
         LOGI("Fan %s", fanOn ? "ON" : "OFF");
     }
+    dragBoost = 0.0f;   // boost applies only while dragging
 }
