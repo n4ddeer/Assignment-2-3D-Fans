@@ -138,6 +138,11 @@ void Fan::drawPart(const glm::vec3& partColor)
 
 void Fan::Render()
 {
+    // Part 2 — advance the blade angle. fanOn/dragBoost stay at their
+    // Part-1 defaults (true / 0) until the touch gestures land in Parts 3-4.
+    if (fanOn) spinAngle += kBaseSpeed + dragBoost;
+    if (spinAngle >= 360.0f) spinAngle -= 360.0f;
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
