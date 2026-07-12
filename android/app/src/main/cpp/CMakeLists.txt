@@ -26,6 +26,7 @@ add_library(glpiframeworkintro SHARED
     NativeTemplate.cpp
     ${SCENE_DIR}/Fan.cpp
     ${SCENE_DIR}/Renderer.cpp
+    ${SCENE_DIR}/Transform.cpp
 )
 
 target_include_directories(glpiframeworkintro PRIVATE
