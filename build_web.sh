@@ -19,12 +19,21 @@ set -e
 
 mkdir -p web
 
+# GLM is header-only; fetch it once into external/glm (gitignored) so emcc
+# has somewhere to find <glm/glm.hpp> — CMake's FetchContent handles this
+# for Desktop/Android, but this script calls emcc directly.
+if [ ! -d external/glm/glm ]; then
+    mkdir -p external
+    git clone --depth 1 --branch 1.0.1 https://github.com/g-truc/glm.git external/glm
+fi
+
 # --- GLFW backend (default) -------------------------------------------------
 emcc -std=c++17 \
     Scene/main.cpp \
     Scene/Fan.cpp \
     Scene/Renderer.cpp \
     -IScene \
+    -Iexternal/glm \
     -DUSE_GLFW \
     -s USE_GLFW=3 \
     -s USE_WEBGL2=1 \
@@ -42,6 +51,7 @@ emcc -std=c++17 \
 #     Scene/Fan.cpp \
 #     Scene/Renderer.cpp \
 #     -IScene \
+#     -Iexternal/glm \
 #     -s USE_SDL=2 \
 #     -s USE_WEBGL2=1 \
 #     -s MIN_WEBGL_VERSION=2 \

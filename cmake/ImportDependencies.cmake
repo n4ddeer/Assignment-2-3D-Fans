@@ -1,13 +1,23 @@
 # ===========================================================================
 # ImportDependencies.cmake
 #
-# Downloads GLFW + GLEW for the desktop build via FetchContent.
-# Android and Emscripten have built-in GL support and skip this.
+# Downloads GLFW + GLEW + GLM for the desktop build via FetchContent.
+# Android and Emscripten have built-in GL support and skip GLFW/GLEW, but
+# still need GLM (Transform.h / Fan.h are header-only consumers of it).
 # ===========================================================================
 
 include(FetchContent)
 
 function(importDependencies)
+
+    message(STATUS "[ImportDependencies] Fetching GLM ...")
+    FetchContent_Declare(
+        glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_TAG        1.0.1
+        GIT_SHALLOW    TRUE
+    )
+    FetchContent_MakeAvailable(glm)
 
     if(ANDROID)
         return()

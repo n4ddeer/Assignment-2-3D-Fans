@@ -20,12 +20,21 @@ REM CALL "%EMSDK_PATH%\emsdk_env.bat"
 
 IF NOT EXIST web MKDIR web
 
+REM GLM is header-only; fetch it once into external\glm (gitignored) so emcc
+REM has somewhere to find <glm/glm.hpp> — CMake's FetchContent handles this
+REM for Desktop/Android, but this script calls emcc directly.
+IF NOT EXIST external\glm\glm (
+    IF NOT EXIST external MKDIR external
+    git clone --depth 1 --branch 1.0.1 https://github.com/g-truc/glm.git external/glm
+)
+
 REM --- GLFW backend (default) -----------------------------------------------
 emcc -std=c++17 ^
      Scene/main.cpp ^
      Scene/Fan.cpp ^
      Scene/Renderer.cpp ^
      -IScene ^
+     -Iexternal/glm ^
      -DUSE_GLFW ^
      -s USE_GLFW=3 ^
      -s USE_WEBGL2=1 ^
@@ -43,6 +52,7 @@ REM      Scene/main.cpp ^
 REM      Scene/Fan.cpp ^
 REM      Scene/Renderer.cpp ^
 REM      -IScene ^
+REM      -Iexternal/glm ^
 REM      -s USE_SDL=2 ^
 REM      -s USE_WEBGL2=1 ^
 REM      -s MIN_WEBGL_VERSION=2 ^

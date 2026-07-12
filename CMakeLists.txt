@@ -37,6 +37,7 @@ target_include_directories(GLPIFrameworkIntro PRIVATE ${SCENE_DIR})
 target_link_libraries(GLPIFrameworkIntro
     PRIVATE glfw
     PRIVATE libglew_static
+    PRIVATE glm::glm
 )
 
 if(MSVC)
