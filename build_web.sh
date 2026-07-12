@@ -32,6 +32,7 @@ emcc -std=c++17 \
     Scene/main.cpp \
     Scene/Fan.cpp \
     Scene/Renderer.cpp \
+    Scene/Transform.cpp \
     -IScene \
     -Iexternal/glm \
     -DUSE_GLFW \
