@@ -74,7 +74,7 @@ static void main_loop()
 
 int main()
 {
-    LOGI("GLPI Framework Intro - WebGL / Emscripten (GLFW)");
+    LOGI("Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)");
 
     if (!glfwInit()) { LOGE("glfwInit failed"); return -1; }
 
@@ -82,7 +82,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    g_window = glfwCreateWindow(800, 600, "GLPI Framework Intro", nullptr, nullptr);
+    g_window = glfwCreateWindow(800, 600, "Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)", nullptr, nullptr);
     if (!g_window) { LOGE("glfwCreateWindow failed"); glfwTerminate(); return -1; }
 
     glfwMakeContextCurrent(g_window);
@@ -145,7 +145,7 @@ static void main_loop()
 
 int main()
 {
-    LOGI("GLPI Framework Intro : WebGL / Emscripten (SDL2)");
+    LOGI("Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)");
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         LOGE("SDL_Init failed: %s", SDL_GetError());
@@ -157,7 +157,7 @@ int main()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
     g_window = SDL_CreateWindow(
-        "GLPI Framework Intro",
+        "Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         800, 600,
         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -212,7 +212,7 @@ static void framebufferSizeCB(GLFWwindow* /*win*/, int w, int h)
 
 int main()
 {
-    std::cout << "GLPI Framework Intro – Desktop (GLFW)\n";
+    std::cout << "Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)\n";
     std::cout << "Click to toggle the fan. Drag to speed it up. Press ESC to quit.\n";
 
     if (!glfwInit()) { std::cerr << "glfwInit failed\n"; return -1; }
@@ -222,7 +222,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_PROFILE,        GLFW_OPENGL_ANY_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "GLPI Framework Intro", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Android Quiz 2 \xE2\x80\x94 \"3D Fan\" (Android / Desktop / WebGL)", nullptr, nullptr);
     if (!window) {
         std::cerr << "glfwCreateWindow failed\n";
         glfwTerminate();

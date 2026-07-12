@@ -1,6 +1,6 @@
 @echo off
 REM =============================================================================
-REM script_build_and_run.bat – Desktop build and run for GLPIFrameworkIntro-Modern
+REM script_build_and_run.bat – Desktop build and run for Fan3D (Android Quiz 2 - "3D Fan")
 REM
 REM Prerequisites:
 REM   - CMake 3.15+  in PATH
@@ -32,7 +32,7 @@ echo.
 echo Watch the fan spin. Click/drag to interact. Press ESC to quit.
 echo.
 pushd build_desktop\Debug
-GLPIFrameworkIntro.exe
+Fan3D.exe
 popd
 
 pause

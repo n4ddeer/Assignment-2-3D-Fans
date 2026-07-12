@@ -6,7 +6,7 @@
 @date 30/06/2026
 
 @brief
-Single-header platform detection for the GLPI Framework Intro demo.
+Single-header platform detection for the 3D Fan demo.
 Supports three targets:
   PLATFORM_EMSCRIPTEN  - WebGL 2.0 via Emscripten + SDL2
   PLATFORM_WINDOWS     - OpenGL (ES compat) via GLFW + GLEW
@@ -59,7 +59,7 @@ defines both __EMSCRIPTEN__ AND _WIN32 on some toolchain setups.
     #include <cstring>
 
     #ifndef LOG_TAG
-    #define LOG_TAG "GLPIFrameworkIntro"
+    #define LOG_TAG "Fan3D"
     #endif
 
     #define LOGI(...) __android_log_print(ANDROID_LOG_INFO,  LOG_TAG, __VA_ARGS__)

@@ -1,6 +1,6 @@
 @echo off
 REM =============================================================================
-REM build_web.bat – Build GLPIFrameworkIntro for WebGL (Emscripten/Windows)
+REM build_web.bat – Build the 3D Fan (Fan3D) for WebGL (Emscripten/Windows)
 REM
 REM Prerequisites:
 REM   1. Install Emscripten SDK: https://emscripten.org/docs/getting_started/
@@ -52,6 +52,7 @@ REM emcc -std=c++17 ^
 REM      Scene/main.cpp ^
 REM      Scene/Fan.cpp ^
 REM      Scene/Renderer.cpp ^
+REM      Scene/Transform.cpp ^
 REM      -IScene ^
 REM      -Iexternal/glm ^
 REM      -s USE_SDL=2 ^

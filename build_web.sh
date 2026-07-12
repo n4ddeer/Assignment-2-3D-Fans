@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # =============================================================================
-# build_web.sh – Build GLPIFrameworkIntro for WebGL using Emscripten
+# build_web.sh – Build the 3D Fan (Fan3D) for WebGL using Emscripten
 #
 # Prerequisites:
 #   1. Install the Emscripten SDK:  https://emscripten.org/docs/getting_started/
@@ -51,6 +51,7 @@ emcc -std=c++17 \
 #     Scene/main.cpp \
 #     Scene/Fan.cpp \
 #     Scene/Renderer.cpp \
+#     Scene/Transform.cpp \
 #     -IScene \
 #     -Iexternal/glm \
 #     -s USE_SDL=2 \
