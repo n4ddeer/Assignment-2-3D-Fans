@@ -1,11 +1,22 @@
-# Android Quiz 2 - "3D Fan" (Android / Desktop / WebGL)
+# 3D Fan: one C++ codebase on Desktop, Android and the Web
 
-This is my submission for Assignment 2. It renders a small table fan (base, pole,
-hub, and four blades) using a single cube drawn seven times with different model
-matrices on the Transform push/pop stack, the same technique used in the 2D
-windmill example from Transform.h's header comment, just extended to 3D. The
-whole thing runs from one shared C++ codebase on Desktop (GLFW), Android
-(GLSurfaceView + JNI), and the Web (Emscripten/WebGL2).
+**Live demo:** https://n4ddeer.github.io/Assignment-2-3D-Fans/
+(click to turn the fan on and off, click and drag to spin it faster)
+
+<img src="Web-Build.png" alt="3D fan running in the browser" width="420">
+
+A small table fan (base, pole, hub and four blades) rendered with OpenGL, built
+from a single cube drawn seven times with different model matrices on a
+push/pop transform stack. The same shared C++ code runs on Desktop (GLFW),
+Android (GLSurfaceView + JNI) and the browser (Emscripten / WebGL2).
+
+Made for CSD 2101 Computer Graphics at SIT-DigiPen (Assignment 2). The matrix
+stack in `Transform.h/.cpp` was provided and left unmodified. The fan model and
+the tap and swipe gestures are my work.
+
+| Desktop | Android | Web |
+|---|---|---|
+| <img src="Desktop-Build.png" width="220"> | <img src="Android-Build.png" width="120"> | <img src="Web-Build.png" width="220"> |
 
 Tapping the screen (or clicking with the mouse) toggles the fan on and off, and
 dragging speeds the blades up temporarily based on how fast you swipe.
